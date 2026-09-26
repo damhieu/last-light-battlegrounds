@@ -1,0 +1,31 @@
+{
+  "name": "last-light-battlegrounds",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5188 --strictPort",
+    "test": "node --test tests/core.test.js",
+    "test:e2e": "playwright test",
+    "format": "prettier --write src tests index.html *.js README.md"
+  },
+  "dependencies": {
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "three": "^0.183.2",
+    "vite": "^8.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "prettier": "^3.9.9"
+  },
+  "description": "Battle royale 3D trên trình duyệt — Thiết kế bởi Đàm Mạnh Hiếu",
+  "author": "Đàm Mạnh Hiếu",
+  "homepage": "https://damhieu.github.io/last-light-battlegrounds/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damhieu/last-light-battlegrounds.git"
+  }
+}

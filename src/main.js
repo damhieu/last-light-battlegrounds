@@ -1,10 +1,18 @@
 import "./style.css";
 import { Game } from "./game.js";
 import { UI } from "./ui.js";
+import { installMobile } from "./mobile.js";
 const root = document.querySelector("#ui");
 try {
   const game = new Game(document.querySelector("#game-canvas"));
   const ui = new UI(game, root);
+  installMobile(game, ui);
+  if (
+    import.meta.env.DEV &&
+    new URLSearchParams(location.search).has("record")
+  ) {
+    import("./recorder.js").then((m) => m.installRecorder(game, ui));
+  }
   // Read-only diagnostics are also useful for reproducible browser checks.
   window.getGameState = () => game.snapshot();
   if (import.meta.env.DEV && new URLSearchParams(location.search).has("test")) {

@@ -24,7 +24,7 @@ export class AudioEngine {
   tone(freq, dur, vol = 0.15, type = "sine", end = 0) {
     if (!this.ctx) return;
     const c = this.ctx,
-      t = c.currentTime,
+      t = this.playbackTime ?? c.currentTime,
       o = c.createOscillator(),
       g = c.createGain();
     o.type = type;
@@ -39,7 +39,7 @@ export class AudioEngine {
   burst(duration, volume, frequency = 1600, pan = 0) {
     if (!this.ctx) return;
     const c = this.ctx,
-      t = c.currentTime,
+      t = this.playbackTime ?? c.currentTime,
       s = c.createBufferSource(),
       f = c.createBiquadFilter(),
       g = c.createGain(),

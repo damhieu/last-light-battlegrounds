@@ -321,6 +321,37 @@ export function installBrowserChecks(g) {
           }
         },
       );
+      await check(
+        "Autoplay uses live combat, scores hits and restores normal play",
+        () => {
+          const statsBefore = localStorage.getItem("lastlight-stats");
+          g.start(false, { demo: true, seed: 260926 });
+          tick(55);
+          assert(g.player.shots > 0, "autoplay never fired");
+          assert(
+            g.player.hits > 0 && g.player.kills > 0,
+            "autoplay never hit or eliminated a bot",
+          );
+          assert(
+            g.player.ammo.every((n) => n >= 0),
+            "autoplay bypassed ammo rules",
+          );
+          assert(g.player.hp > 0, "autoplay did not survive the demo");
+          output.textContent += `\nDemo: ${g.player.kills} kills, ${g.player.shots} shots, ${Math.round(g.player.hp)} HP`;
+          g.end(false, "TEST");
+          assert(
+            localStorage.getItem("lastlight-stats") === statsBefore,
+            "demo changed player stats",
+          );
+          g.lobby();
+          assert(
+            !g.demo && !g.pilot && !g.keys.size,
+            "demo controls leaked into lobby",
+          );
+          g.start(true);
+          assert(!g.demo && !g.pilot, "normal play still uses autoplay");
+        },
+      );
     } finally {
       g.lobby();
       g.testing = false;

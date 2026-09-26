@@ -1,6 +1,6 @@
 # LAST LIGHT — Battlegrounds
 
-**Thiết kế bởi Đàm Mạnh Hiếu · v1.1.0**
+**Thiết kế bởi Đàm Mạnh Hiếu · v1.2.0**
 
 🎮 **[Chơi ngay trên GitHub Pages](https://damhieu.github.io/last-light-battlegrounds/)** · [Mã nguồn](https://github.com/damhieu/last-light-battlegrounds)
 
@@ -35,7 +35,9 @@ Bản production mở ở **http://127.0.0.1:5188/**.
 - Hệ thống giáp, cứu thương, lựu đạn có vật lý và vùng sát thương, nhặt tiếp tế, giới hạn thể lực, ngồi và nhảy.
 - Bản đồ nhỏ, bản đồ toàn đảo, thông báo hạ gục, lịch sử giao tranh, kết quả xếp hạng và chơi lại.
 - Cài đặt độ nhạy, âm lượng, 3 mức hình ảnh và 3 độ khó được lưu trên thiết bị.
-- Điều khiển cảm ứng cơ bản: joystick, kéo nhìn, bắn, ngắm, nhảy, thay đạn, nhặt đồ; chạm các ô vũ khí để đổi súng.
+- Cài lên màn hình chính iPhone, mở dạng ứng dụng, lưu ngoại tuyến sau lần tải đầu; xem [hướng dẫn iPhone](IPHONE.md).
+- Chế độ **Xem bot chơi**: tự di chuyển, tìm mục tiêu, đổi súng, ngắm, bắn, thay đạn, hồi máu; không cộng thống kê người chơi.
+- Điều khiển cảm ứng: joystick, kéo nhìn, bắn, ngắm, nhảy, thay đạn, nhặt đồ, chạy nhanh, ngồi, vùng an toàn cho tai thỏ; chạm các ô vũ khí để đổi súng.
 
 ## Điều khiển
 
@@ -93,3 +95,19 @@ npm run preview
 ```
 
 Sau đó mở `http://127.0.0.1:5188/last-light-battlegrounds/`. Chạy `npm run build` bình thường để quay lại đường dẫn gốc khi phát triển local.
+
+## Quay demo HD cho Facebook
+
+Công cụ ghi hình chỉ có trong development. Video lấy cảnh từ WebGL, HUD từ trạng thái trận đấu và âm thanh tổng hợp của game; không xin camera hay microphone.
+
+```sh
+RECORD_DEMO=1 npm run dev -- --port 5190
+```
+
+Mở `http://127.0.0.1:5190/?record=1`, nhấn **QUAY DEMO HD · 55 GIÂY** và giữ trang hoạt động. Bản gốc WebM lưu vào `exports/demo-source.webm`, âm thanh game được dựng lại từ các sự kiện có thời gian chính xác vào `exports/demo-audio.wav` qua endpoint chỉ bật khi có `RECORD_DEMO=1`. Thư mục `exports/` không được đưa vào Git.
+
+Đổi sang MP4 H.264/AAC, 1080×1920, 30 fps:
+
+```sh
+ffmpeg -i exports/demo-source.webm -i exports/demo-audio.wav -map 0:v:0 -map 1:a:0 -vf fps=30 -af volume=6dB -t 55 -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart exports/Last-Light-Facebook-HD.mp4
+```

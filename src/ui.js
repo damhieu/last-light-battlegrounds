@@ -51,14 +51,14 @@ export class UI {
  <div class="film-grain"></div><div id="damage-vignette"></div><div id="zone-vignette"></div>
  <section id="lobby" class="lobby">
   <header class="topbar"><a class="brand" href="#" aria-label="Last Light"><span class="brand-mark">L<span>L</span></span><span>LAST LIGHT<small>B A T T L E G R O U N D S</small></span></a><nav><button class="nav-active">CHIẾN TRƯỜNG</button><button data-action="guide">HƯỚNG DẪN</button><button data-action="settings">CÀI ĐẶT</button></nav><div class="build-tag"><i></i> SẴN SÀNG CHIẾN ĐẤU <span>v${BUILD_INFO.version}</span></div></header>
-  <div class="lobby-copy"><div class="eyebrow"><span class="small-line"></span> OPERATION NORTHWATCH</div><h1>ONE ISLAND.<br>ONE <em>SURVIVOR.</em></h1><p>Không có cơ hội thứ hai.<br>Nhặt trang bị. Làm chủ chiến trường.<br>Trở thành người sống sót cuối cùng.</p><div class="hero-meta"><span>${svg("cross")} GÓC NHÌN THỨ NHẤT</span><span>${svg("shield")} SOLO SINH TỒN</span></div><button class="text-link" data-action="guide">LÀM QUEN CHIẾN TRƯỜNG <span>↗</span></button></div>
+  <div class="lobby-copy"><div class="eyebrow"><span class="small-line"></span> OPERATION NORTHWATCH</div><h1>ONE ISLAND.<br>ONE <em>SURVIVOR.</em></h1><p>Không có cơ hội thứ hai.<br>Nhặt trang bị. Làm chủ chiến trường.<br>Trở thành người sống sót cuối cùng.</p><div class="hero-meta"><span>${svg("cross")} GÓC NHÌN THỨ NHẤT</span><span>${svg("shield")} SOLO SINH TỒN</span></div><button class="text-link" data-action="guide">LÀM QUEN CHIẾN TRƯỜNG <span>↗</span></button><div class="quick-actions"><button id="install-iphone">CÀI TRÊN iPHONE ↗</button><button id="watch-demo">▶ XEM BOT CHƠI</button></div></div>
   <aside class="operator-tag"><span class="tag-line"></span><div><small>OPERATOR / 01</small><strong>THE PATHFINDER</strong><span>Đã sẵn sàng triển khai</span></div><span class="operator-cross">+</span></aside>
   <aside class="intel-card"><div class="card-label"><span>ĐIỂM TRIỂN KHAI</span><span>01 / 01</span></div><div class="intel-map"><canvas id="lobby-map" width="360" height="230" aria-label="Bản đồ đảo Northwatch"></canvas><span class="map-pin"></span><span class="map-coord">43° 17′ N / 16° 28′ E</span></div><h2>NORTHWATCH <span>↗</span></h2><p>Đảo ven biển · Thị trấn · Khu quân sự</p><div class="intel-footer"><span><i></i> HOÀNG HÔN</span><span>640 × 640 m</span></div></aside>
   <footer class="deployment"><div class="match-select"><small>CHẾ ĐỘ CHƠI</small><div class="mode-buttons"><button id="mode-solo" class="selected">SOLO SINH TỒN</button><button id="mode-practice">LUYỆN TẬP</button></div><p id="mode-description">Bạn + 23 bot · Vòng bo thu hẹp · Một người chiến thắng</p></div><div class="loadout-preview"><small>TRANG BỊ KHỞI ĐẦU</small><strong>M416 <span>/</span> Kar98k <span>/</span> UMP45</strong><span>3 cứu thương · 3 lựu đạn · Giáp cấp 2</span></div><button id="deploy" class="deploy-button"><span><small>ĐẢO ĐÃ SẴN SÀNG</small>VÀO CHIẾN TRƯỜNG</span>${svg("arrow")}</button></footer>
   <div class="lobby-bottom"><div class="build-credit" id="build-credit"><span class="designer-credit">Thiết kế bởi <strong>${BUILD_INFO.author}</strong></span><span class="build-details">v${BUILD_INFO.version} · Build: <time datetime="${BUILD_INFO.builtAt}">${BUILD_TIME_LABEL}</time></span></div><span>MỘT GAME BATTLE ROYALE ĐỘC LẬP · LẤY CẢM HỨNG TỪ PUBG</span></div>
  </section>
  <section id="hud" class="hidden">
-  <div class="compass"><div id="compass-ticks"></div><span class="compass-marker">▼</span><b id="heading">N</b></div>
+  <div id="demo-badge" class="hidden">● BOT TỰ CHƠI <button id="stop-demo">VỀ SẢNH ↗</button></div><div class="compass"><div id="compass-ticks"></div><span class="compass-marker">▼</span><b id="heading">N</b></div>
   <div class="match-stats"><span><b id="alive">24</b> CÒN SỐNG</span><span><b id="kills">0</b> HẠ GỤC</span><button id="pause-button" aria-label="Tạm dừng">Ⅱ</button></div>
   <div class="zone-panel"><div class="zone-icon">${svg("shield")}</div><div><small id="zone-title">VÙNG AN TOÀN / 01</small><strong id="zone-time">00:45</strong></div><span id="zone-state">CHUẨN BỊ</span></div><div id="kill-feed"></div>
   <div id="drop-banner"><span>ĐANG TRIỂN KHAI</span><strong>NORTHWATCH</strong><small>W A S D di chuyển dù · SHIFT hạ nhanh</small><b id="altitude">50 m</b></div>
@@ -76,7 +76,7 @@ export class UI {
  <section id="tactical-map" class="modal hidden"><div class="map-modal"><div class="modal-heading"><div><small>BẢN ĐỒ CHIẾN THUẬT</small><h2>NORTHWATCH ISLAND</h2></div><button data-action="closemap" class="icon-button" aria-label="Đóng bản đồ">${svg("close")}</button></div><canvas id="full-map" width="700" height="700" aria-label="Bản đồ toàn đảo"></canvas><div class="map-legend"><span><i class="legend-player"></i> Vị trí của bạn</span><span><i class="legend-zone"></i> Vòng bo</span><span><i class="legend-next"></i> Vùng tiếp theo</span></div><p>Nhấn M để đóng · Trận đấu tiếp tục khi xem bản đồ</p></div></section>
  <section id="inventory" class="hidden"><small>TRANG BỊ CỦA BẠN</small><h2>BA LÔ</h2><div id="inventory-content"></div><p>1 / 2 / 3 đổi súng · H cứu thương · G lựu đạn<br>Nhấn TAB để đóng</p></section>
  <section id="pause" class="modal hidden"><div class="menu-panel"><small>LAST LIGHT / BATTLEGROUNDS</small><h2>TẠM DỪNG</h2><p>Trận đấu được giữ nguyên. Sẵn sàng khi bạn trở lại.</p><button id="resume" class="primary-button">TIẾP TỤC CHIẾN ĐẤU <span>↗</span></button><button data-action="settings" class="menu-button">CÀI ĐẶT ${svg("gear")}</button><button data-action="guide" class="menu-button">HƯỚNG DẪN ${svg("map")}</button><button id="return-lobby" class="menu-button">VỀ SẢNH <span>↗</span></button></div></section>
- <section id="settings" class="modal hidden"><div class="menu-panel"><div class="modal-heading"><div><small>TÙY CHỈNH TRẢI NGHIỆM</small><h2>CÀI ĐẶT</h2></div><button data-action="closesettings" class="icon-button" aria-label="Đóng cài đặt">${svg("close")}</button></div><label class="setting">Độ nhạy chuột <output id="sensitivity-value">1.0</output><input id="sensitivity" type="range" min=".2" max="2.5" step=".1" value="${this.g.settings.sensitivity}"/></label><label class="setting">Âm lượng <output id="volume-value">55%</output><input id="volume" type="range" min="0" max="1" step=".05" value="${this.g.settings.volume}"/></label><label class="setting">Chất lượng hình ảnh<select id="quality"><option value="high">Cao · Bóng đổ & thảm cỏ</option><option value="medium">Cân bằng · Độ phân giải tiêu chuẩn</option><option value="low">Mượt · Tối ưu hiệu năng</option></select></label><label class="setting">Độ khó bot<select id="difficulty"><option value="easy">Tân binh</option><option value="normal">Chiến binh</option><option value="hard">Tinh nhuệ</option></select></label><button data-action="closesettings" class="primary-button">LƯU & TRỞ LẠI <span>↗</span></button></div></section>
+ <section id="settings" class="modal hidden"><div class="menu-panel"><div class="modal-heading"><div><small>TÙY CHỈNH TRẢI NGHIỆM</small><h2>CÀI ĐẶT</h2></div><button data-action="closesettings" class="icon-button" aria-label="Đóng cài đặt">${svg("close")}</button></div><label class="setting">Độ nhạy chuột / cảm ứng <output id="sensitivity-value">1.0</output><input id="sensitivity" type="range" min=".2" max="2.5" step=".1" value="${this.g.settings.sensitivity}"/></label><label class="setting">Âm lượng <output id="volume-value">55%</output><input id="volume" type="range" min="0" max="1" step=".05" value="${this.g.settings.volume}"/></label><label class="setting">Chất lượng hình ảnh<select id="quality"><option value="high">Cao · Bóng đổ & thảm cỏ</option><option value="medium">Cân bằng · Độ phân giải tiêu chuẩn</option><option value="low">Mượt · Tối ưu hiệu năng</option></select></label><label class="setting">Độ khó bot<select id="difficulty"><option value="easy">Tân binh</option><option value="normal">Chiến binh</option><option value="hard">Tinh nhuệ</option></select></label><button data-action="closesettings" class="primary-button">LƯU & TRỞ LẠI <span>↗</span></button></div></section>
  <section id="guide" class="modal hidden"><div class="guide-panel"><div class="modal-heading"><div><small>SỐNG SÓT LÀ NHIỆM VỤ DUY NHẤT</small><h2>LÀM CHỦ CHIẾN TRƯỜNG</h2></div><button data-action="closeguide" class="icon-button" aria-label="Đóng hướng dẫn">${svg("close")}</button></div><div class="guide-intro"><b>24 người. Một hòn đảo. Một người sống sót.</b><p>Di chuyển vào vòng trắng trên bản đồ. Vòng xanh thu hẹp dần và gây sát thương khi bạn ở bên ngoài. Dùng nhà, cây và vật chắn làm nơi ẩn nấp.</p></div><div class="controls-grid">${[
    ["W A S D", "Di chuyển"],
    ["CHUỘT", "Nhìn xung quanh"],
@@ -100,7 +100,7 @@ export class UI {
      "",
    )}</div><div class="guide-tip">${svg("bolt")} <p><b>MẸO CHIẾN THUẬT</b> Ngắm và ngồi giúp giảm độ tản đạn. Kar98k có kính 4×. Cứu thương mất 3,5 giây và cần đứng yên. Nhặt giáp để tăng cơ hội sống sót.</p></div><button data-action="closeguide" class="primary-button">ĐÃ RÕ. SẴN SÀNG TRIỂN KHAI. <span>↗</span></button></div></section>
  <section id="results" class="modal hidden"><div class="results-panel"><div id="result-eyebrow">KẾT THÚC TRẬN ĐẤU</div><h2 id="result-title"></h2><p id="result-subtitle"></p><div class="result-rank"><strong id="result-rank"></strong><span>/ 24</span></div><div class="result-stats"><div><b id="result-kills"></b><span>HẠ GỤC</span></div><div><b id="result-damage"></b><span>SÁT THƯƠNG</span></div><div><b id="result-time"></b><span>SỐNG SÓT</span></div><div><b id="result-accuracy"></b><span>CHÍNH XÁC</span></div></div><button id="play-again" class="primary-button">TRIỂN KHAI LẦN NỮA <span>↗</span></button><button id="results-lobby" class="text-link">TRỞ VỀ SẢNH</button></div></section>
- <div id="touch-controls" class="hidden"><div id="touch-look"></div><div id="joystick"><i></i></div><button id="touch-shoot">${svg("cross")}</button><button id="touch-aim">${svg("target")}</button><button id="touch-jump">↑</button><button id="touch-reload">R</button><button id="touch-pickup">E</button></div>
+ <div id="touch-controls" class="hidden"><div id="touch-look"></div><div id="joystick"><i></i></div><button id="touch-shoot" aria-label="Bắn">${svg("cross")}</button><button id="touch-aim" aria-label="Bật / tắt ngắm" aria-pressed="false">${svg("target")}</button><button id="touch-jump" aria-label="Nhảy">↑</button><button id="touch-reload" aria-label="Thay đạn">ĐẠN</button><button id="touch-pickup" aria-label="Nhặt đồ">NHẶT</button><button id="touch-sprint" aria-pressed="false">CHẠY</button><button id="touch-crouch" aria-pressed="false">NGỒI</button></div>
  `;
     this.el = {};
     for (const e of this.root.querySelectorAll("[id]")) this.el[e.id] = e;
@@ -110,6 +110,8 @@ export class UI {
   }
   bind() {
     this.training = false;
+    this.el["watch-demo"].onclick = () => this.g.start(false, { demo: true });
+    this.el["stop-demo"].onclick = () => this.g.lobby();
     this.el.deploy.onclick = () => this.g.start(this.training);
     this.el["mode-solo"].onclick = () => this.setMode(false);
     this.el["mode-practice"].onclick = () => this.setMode(true);
@@ -117,7 +119,8 @@ export class UI {
     this.el["pause-button"].onclick = () => this.g.pause();
     this.el["return-lobby"].onclick = this.el["results-lobby"].onclick = () =>
       this.g.lobby();
-    this.el["play-again"].onclick = () => this.g.start(this.training);
+    this.el["play-again"].onclick = () =>
+      this.g.start(this.g.demo ? false : this.training, { demo: this.g.demo });
     for (const b of this.root.querySelectorAll("[data-action]"))
       b.onclick = () => {
         const a = b.dataset.action;
@@ -182,7 +185,11 @@ export class UI {
     );
   }
   bindTouch() {
-    this.touch = matchMedia("(pointer: coarse)").matches;
+    this.touch =
+      matchMedia("(pointer: coarse)").matches ||
+      (import.meta.env.DEV &&
+        new URLSearchParams(location.search).has("touch"));
+    document.body.classList.toggle("touch-device", this.touch);
     if (!this.touch) return;
     const g = this.g;
     const joy = this.el.joystick;
@@ -199,7 +206,7 @@ export class UI {
       joy.setPointerCapture(id);
     };
     joy.onpointermove = (e) => {
-      if (e.pointerId !== id) return;
+      if (e.pointerId !== id || !g.active) return;
       const x = clamp(e.clientX - origin.x, -40, 40),
         y = clamp(e.clientY - origin.y, -40, 40);
       joy.firstElementChild.style.transform = `translate(${x}px,${y}px)`;
@@ -211,37 +218,69 @@ export class UI {
       ])
         on ? g.keys.add(key) : g.keys.delete(key);
     };
-    joy.onpointerup = joy.onpointercancel = clear;
+    joy.onpointerup = joy.onpointercancel = joy.onlostpointercapture = clear;
     let last = null;
     const look = this.el["touch-look"];
     look.onpointerdown = (e) => {
-      last = { x: e.clientX, y: e.clientY };
+      last = { x: e.clientX, y: e.clientY, id: e.pointerId };
       look.setPointerCapture(e.pointerId);
     };
     look.onpointermove = (e) => {
-      if (!last) return;
-      g.player.yaw -= (e.clientX - last.x) * 0.006;
+      if (!last || last.id !== e.pointerId || !g.active) return;
+      const sensitivity =
+        0.004 * g.settings.sensitivity * (g.mouse.aim ? 0.5 : 1);
+      g.player.yaw -= (e.clientX - last.x) * sensitivity;
       g.player.pitch = clamp(
-        g.player.pitch - (e.clientY - last.y) * 0.006,
+        g.player.pitch - (e.clientY - last.y) * sensitivity,
         -1.4,
         1.4,
       );
-      last = { x: e.clientX, y: e.clientY };
+      last = { x: e.clientX, y: e.clientY, id: e.pointerId };
     };
-    look.onpointerup = look.onpointercancel = () => (last = null);
+    look.onpointerup =
+      look.onpointercancel =
+      look.onlostpointercapture =
+        () => (last = null);
     this.el["touch-shoot"].onpointerdown = (e) => {
       e.currentTarget.setPointerCapture(e.pointerId);
+      if (!g.active) return;
       g.mouse.fire = true;
       g.shoot();
     };
-    this.el["touch-shoot"].onpointerup = this.el[
-      "touch-shoot"
-    ].onpointercancel = () => (g.mouse.fire = false);
-    this.el["touch-aim"].onclick = () => (g.mouse.aim = !g.mouse.aim);
+    this.el["touch-shoot"].onpointerup =
+      this.el["touch-shoot"].onpointercancel =
+      this.el["touch-shoot"].onlostpointercapture =
+        () => (g.mouse.fire = false);
+    this.el["touch-aim"].onclick = () => {
+      g.mouse.aim = !g.mouse.aim;
+      this.el["touch-aim"].setAttribute("aria-pressed", g.mouse.aim);
+    };
+    this.el["touch-sprint"].onclick = () => {
+      this.sprint = !this.sprint;
+      this.sprint ? g.keys.add("ShiftLeft") : g.keys.delete("ShiftLeft");
+      this.el["touch-sprint"].setAttribute("aria-pressed", this.sprint);
+    };
+    this.el["touch-crouch"].onclick = () => {
+      g.player.crouched = !g.player.crouched;
+      this.el["touch-crouch"].setAttribute("aria-pressed", g.player.crouched);
+    };
+    this.resetTouch = () => {
+      clear();
+      last = null;
+      this.sprint = false;
+      g.keys.delete("ShiftLeft");
+      g.mouse.fire = g.mouse.aim = false;
+      for (const name of ["sprint", "aim", "crouch"])
+        this.el[`touch-${name}`].setAttribute(
+          "aria-pressed",
+          name === "crouch" && g.player.crouched,
+        );
+    };
+    addEventListener("blur", this.resetTouch);
     this.el["touch-reload"].onclick = () => g.reload();
     this.el["touch-pickup"].onclick = () => g.pickup();
     this.el["touch-jump"].onclick = () => {
-      if (g.player.grounded) {
+      if (g.player.grounded && g.mode === "playing") {
         g.player.vy = 6.3;
         g.player.grounded = false;
       }
@@ -266,6 +305,8 @@ export class UI {
   }
   event(type, data) {
     const g = this.g;
+    if (["start", "pause", "end", "lobby"].includes(type)) this.resetTouch?.();
+    this.show("demo-badge", !!g.demo && (g.active || g.mode === "paused"));
     if (type === "start") {
       for (const id of [
         "lobby",
@@ -278,7 +319,10 @@ export class UI {
       ])
         this.show(id, false);
       this.show("hud", true);
-      this.show("touch-controls", this.touch);
+      this.show("touch-controls", this.touch && !g.demo);
+      this.el["drop-banner"].querySelector("small").textContent = this.touch
+        ? "Kéo cần di chuyển dù · CHẠY hạ nhanh"
+        : "W A S D di chuyển dù · SHIFT hạ nhanh";
       this.mapOpen = this.inventoryOpen = false;
       this.feed = [];
     }
@@ -291,7 +335,7 @@ export class UI {
     }
     if (type === "resume") {
       this.show("pause", false);
-      this.show("touch-controls", this.touch);
+      this.show("touch-controls", this.touch && !g.demo);
     }
     if (type === "lobby") {
       for (const id of [

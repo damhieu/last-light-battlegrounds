@@ -2544,3 +2544,325 @@ p {
     font-size: 7px;
   }
 }
+
+/* iPhone home-screen edition */
+body {
+  overscroll-behavior: none;
+}
+#game-canvas,
+#hud,
+#touch-controls {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  pointer-events: auto;
+}
+.quick-actions button {
+  border: 1px solid #efbd6955;
+  background: #142124a8;
+  padding: 11px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--gold);
+}
+.quick-actions button:hover {
+  background: #efbd6925;
+}
+.install-panel {
+  width: min(560px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid #efbd6945;
+  padding: 30px;
+}
+.install-panel h2 {
+  font:
+    600 36px "Barlow Condensed",
+    sans-serif;
+  margin: 5px 0 0;
+}
+.install-panel small {
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.install-app {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 22px 0;
+}
+.install-app img {
+  border-radius: 14px;
+}
+.install-app strong {
+  display: block;
+  font:
+    700 25px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 2px;
+}
+.install-app span {
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+  color: var(--muted);
+}
+.install-steps {
+  padding-left: 25px;
+}
+.install-steps li {
+  padding: 0 0 14px 8px;
+  font-size: 14px;
+}
+.install-steps li::marker {
+  color: var(--gold);
+  font-weight: 700;
+}
+.install-steps p,
+.install-tip p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 6px 0 0;
+}
+.install-tip {
+  padding: 15px;
+  background: #efbd690c;
+  border-left: 2px solid var(--gold);
+}
+.install-tip b {
+  font-size: 12px;
+  color: var(--gold);
+}
+#offline-state {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.install-panel .text-link {
+  margin: 15px 0;
+  font-size: 11px;
+}
+.install-panel .primary-button {
+  margin-top: 16px;
+  font-size: 20px;
+}
+#iphone-install {
+  z-index: 30;
+  padding: max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
+#demo-badge {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 8px 14px;
+  background: #142124cc;
+  border: 1px solid #efbd6955;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+#demo-badge button {
+  pointer-events: auto;
+  font-size: 10px;
+  border-left: 1px solid #efbd6955;
+  padding-left: 15px;
+  min-height: 28px;
+}
+.touch-device #touch-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 10px;
+  font-weight: 600;
+  pointer-events: auto;
+}
+#touch-controls button[aria-pressed="true"] {
+  background: #efbd69b0;
+  color: #142124;
+  border-color: var(--gold);
+}
+#touch-controls #touch-sprint {
+  left: calc(48px + env(safe-area-inset-left));
+  right: auto;
+  bottom: 244px;
+}
+#touch-controls #touch-crouch {
+  right: 185px;
+  bottom: 158px;
+  width: 44px;
+  height: 44px;
+}
+.touch-device #joystick {
+  left: calc(30px + env(safe-area-inset-left));
+}
+.touch-device .topbar {
+  padding-left: max(18px, env(safe-area-inset-left));
+  padding-right: max(18px, env(safe-area-inset-right));
+}
+.touch-device #hud {
+  top: env(safe-area-inset-top);
+  bottom: env(safe-area-inset-bottom);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+}
+.touch-device #touch-controls {
+  right: env(safe-area-inset-right);
+  bottom: env(safe-area-inset-bottom);
+}
+.touch-device .bottom-hints,
+.touch-device .weapon-hint,
+.touch-device .supplies kbd {
+  display: none;
+}
+.touch-device .supplies button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.touch-device #weapon-slots button {
+  min-height: 38px;
+}
+@media (max-width: 600px) {
+  .quick-actions {
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .quick-actions button {
+    font-size: 9px;
+    padding: 11px 10px;
+    letter-spacing: 0.5px;
+  }
+  .install-panel {
+    padding: 22px;
+  }
+  .install-panel h2 {
+    font-size: 30px;
+  }
+  #demo-badge {
+    top: 100px;
+    font-size: 9px;
+    gap: 10px;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .quick-actions {
+    margin-top: 12px;
+  }
+  .quick-actions button {
+    font-size: 9px;
+    padding: 9px 11px;
+  }
+  .touch-device #joystick {
+    bottom: 65px;
+    width: 86px;
+    height: 86px;
+    left: calc(32px + env(safe-area-inset-left));
+  }
+  .touch-device #touch-controls #touch-sprint {
+    bottom: 162px;
+    left: calc(52px + env(safe-area-inset-left));
+    width: 44px;
+    height: 44px;
+  }
+  .touch-device #touch-controls #touch-shoot {
+    bottom: 100px;
+    right: 26px;
+    width: 62px;
+    height: 62px;
+  }
+  .touch-device #touch-controls #touch-aim {
+    bottom: 158px;
+    right: 105px;
+  }
+  .touch-device #touch-controls #touch-jump {
+    bottom: 175px;
+    right: 28px;
+  }
+  .touch-device #touch-controls #touch-reload {
+    bottom: 102px;
+    right: 106px;
+  }
+  .touch-device #touch-controls #touch-pickup {
+    bottom: 48px;
+    right: 106px;
+  }
+  .touch-device #touch-controls #touch-crouch {
+    bottom: 48px;
+    right: 29px;
+  }
+  .touch-device .player-panel {
+    left: 16px;
+    bottom: 5px;
+    width: 180px;
+  }
+  .touch-device .player-title,
+  .touch-device #stance {
+    display: none;
+  }
+  .touch-device .supplies {
+    position: absolute;
+    left: 185px;
+    bottom: 0;
+  }
+  .touch-device .weapon-panel {
+    width: 220px;
+    right: 185px;
+    bottom: 5px;
+  }
+  .touch-device .minimap-wrap {
+    bottom: auto;
+    width: 100px;
+    right: 15px;
+    top: 42px;
+  }
+  .touch-device #minimap {
+    width: 100%;
+    height: auto;
+  }
+  .touch-device .minimap-label,
+  .touch-device .map-distance {
+    display: none;
+  }
+  .touch-device .match-stats {
+    top: 10px;
+    right: 15px;
+  }
+  .touch-device .zone-panel {
+    left: 15px;
+    top: 12px;
+  }
+  .touch-device #kill-feed {
+    top: 48px;
+    left: 15px;
+  }
+  .touch-device .compass {
+    top: 10px;
+  }
+  #demo-badge {
+    top: 48px;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .touch-device .lobby-copy > p {
+    display: none;
+  }
+}
+.touch-device .minimap-wrap,
+.touch-device .match-stats,
+.touch-device .weapon-panel,
+.touch-device .player-panel {
+  z-index: 6;
+}

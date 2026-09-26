@@ -36,3 +36,15 @@ Inspected rendered UI at 1440×900 and 390×844. Confirmed Vietnamese labels, lo
 ## Scope
 
 Single-player battle royale against bots. No online multiplayer or drivable vehicles. Procedural stylized 3D models and synthesized audio, with no PUBG asset dependencies. WebGL2 is required. Pointer-lock restrictions in embedded browsers have a drag-to-look and arrow-key fallback. Best experienced with a desktop keyboard and mouse.
+
+## Version 1.2.0 — iPhone & bot demo
+
+- 10 Node tests passed: gameplay core, repository-scoped offline fallback, portable manifest, real PNG dimensions.
+- 15 in-engine browser checks passed, including a 55-second autoplay simulation that fires, hits and eliminates opponents, survives, and releases control on returning to the lobby.
+- Touch layout inspected at 844×390 and 390×844. Real UI clicks verified shooting (ammo 30 → 29), aim/crouch/sprint toggles, reload, pause/resume and input reset.
+- iPhone installation panel visually inspected at 390×844; instructions link to Apple Safari documentation.
+- Real gameplay capture: portrait 1080×1920, approximately 55 seconds, with HUD, author credit and a link to play. H.264/AAC MP4 at 30 fps. Audio events are rendered with the game sound engine against a precise offline clock to avoid browser capture drift.
+- No physical iPhone hardware was available for this verification; touch layout checks used the desktop browser with a development-only touch override.
+
+- Offline smoke test passed with the production bundle under `/last-light-battlegrounds/`: cache completed, local preview server stopped (HTTP unreachable), page reloaded from service worker, practice match launched with 24 combatants and no console errors. Immutable same-origin asset lookup ignores response Vary differences between precache and module/CSS requests.
+- Final Facebook artifact verified by ffprobe: 1080×1920 H.264, 30 fps, 55.000-second MP4; AAC stereo audio duration 55.000 seconds. Final recorded match: 6 eliminations. Audio peak −5.4 dBFS (no clipping).

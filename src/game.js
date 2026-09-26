@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DemoPilot } from "./demo.js";
 import { World } from "./world.js";
 import { createSoldier, createWeapon, createLoot } from "./models.js";
 import { AudioEngine } from "./audio.js";
@@ -68,7 +69,7 @@ export class Game {
     this.settings = {
       sensitivity: 1,
       volume: 0.55,
-      quality: "high",
+      quality: matchMedia("(pointer: coarse)").matches ? "medium" : "high",
       difficulty: "normal",
     };
     try {
@@ -185,13 +186,17 @@ export class Game {
   emit(type, data) {
     this.onEvent?.(type, data);
   }
-  start(training = false) {
+  start(training = false, options = {}) {
+    this.demo = !!options.demo;
+    this.pilot = this.demo ? new DemoPilot(this) : null;
     this.clearMatch();
     this.training = training;
     this.player = this.newPlayer();
     this.time = 0;
     this.zone = zoneAt(0);
-    this.rng = seeded(Date.now() % 999999);
+    this.rng = seeded(
+      options.seed ?? (this.demo ? 260926 : Date.now() % 999999),
+    );
     this.mode = training ? "playing" : "drop";
     this.elapsed = 0;
     this.result = null;
@@ -334,7 +339,7 @@ export class Game {
     this.loot.push({ x, z, type, mesh, active: true });
   }
   requestLock() {
-    if (matchMedia("(pointer: coarse)").matches) return;
+    if (this.demo || matchMedia("(pointer: coarse)").matches) return;
     try {
       const r = this.canvas.requestPointerLock?.();
       r?.catch(() => {
@@ -351,6 +356,7 @@ export class Game {
   }
   bindInput() {
     addEventListener("resize", () => {
+      if (this.recordingSize) return;
       this.camera.aspect = innerWidth / innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(innerWidth, innerHeight);
@@ -482,6 +488,8 @@ export class Game {
     this.emit("resume");
   }
   lobby() {
+    this.demo = false;
+    this.pilot = null;
     this.mode = "lobby";
     document.exitPointerLock?.();
     this.clearMatch();
@@ -1191,7 +1199,7 @@ export class Game {
     this.mode = "ended";
     this.mouse.fire = this.mouse.aim = false;
     document.exitPointerLock?.();
-    if (!this.testing)
+    if (!this.testing && !this.demo)
       try {
         const stats = JSON.parse(
           localStorage.getItem("lastlight-stats") ||
@@ -1225,6 +1233,7 @@ export class Game {
     }
     this.renderer.render(this.scene, this.camera);
     this.onFrame?.(dt);
+    this.onRendered?.(now);
     requestAnimationFrame(this.frame);
   }
   advance(dt) {
@@ -1240,6 +1249,7 @@ export class Game {
           : "Vùng an toàn tiếp theo đã xuất hiện",
       );
     }
+    this.pilot?.update(dt);
     this.updatePlayer(dt);
     if (this.active) this.updateBots(dt);
     if (this.active) this.updateGrenades(dt);
@@ -1250,6 +1260,7 @@ export class Game {
     )
       this.damagePlayerContinuous(dt * this.zone.damage);
     this.updateCamera(dt);
+    if (this.pilot?.wantShoot && this.active) this.shoot();
     this.updateEffects(dt);
     this.hitTime = Math.max(0, this.hitTime - dt);
     this.damageTime = Math.max(0, this.damageTime - dt);
@@ -1264,6 +1275,7 @@ export class Game {
   snapshot() {
     return {
       mode: this.mode,
+      demo: !!this.demo,
       time: this.time,
       player: { ...this.player },
       bots: this.bots.map((b) => ({

@@ -1,4 +1,6 @@
 import "./style.css";
+import { installViewport } from "./viewport.js";
+installViewport();
 import { Game } from "./game.js";
 import { UI } from "./ui.js";
 import { installMobile } from "./mobile.js";

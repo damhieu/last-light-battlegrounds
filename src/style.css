@@ -71,14 +71,45 @@ a {
 canvas {
   display: block;
 }
-#app,
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+#viewport {
+  position: fixed;
+  left: var(--viewport-left, 0px);
+  top: var(--viewport-top, 0px);
+  width: var(--viewport-width, 100%);
+  height: var(--viewport-height, 100%);
+  transform: scale(var(--viewport-scale, 1));
+  transform-origin: top left;
+  overflow: hidden;
+}
+#app {
+  position: absolute;
+  top: var(--safe-top);
+  right: var(--safe-right);
+  bottom: var(--safe-bottom);
+  left: var(--safe-left);
+  overflow: hidden;
+}
 #game-canvas,
 #ui {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  height: 100dvh;
+}
+#game-canvas {
+  touch-action: none;
 }
 #game-canvas {
   outline: none;
@@ -2696,7 +2727,7 @@ body {
   border-color: var(--gold);
 }
 #touch-controls #touch-sprint {
-  left: calc(48px + env(safe-area-inset-left));
+  left: 48px;
   right: auto;
   bottom: 244px;
 }
@@ -2707,21 +2738,16 @@ body {
   height: 44px;
 }
 .touch-device #joystick {
-  left: calc(30px + env(safe-area-inset-left));
+  left: 30px;
 }
 .touch-device .topbar {
   padding-left: max(18px, env(safe-area-inset-left));
   padding-right: max(18px, env(safe-area-inset-right));
 }
-.touch-device #hud {
-  top: env(safe-area-inset-top);
-  bottom: env(safe-area-inset-bottom);
-  left: env(safe-area-inset-left);
-  right: env(safe-area-inset-right);
-}
+.touch-device #hud,
 .touch-device #touch-controls {
-  right: env(safe-area-inset-right);
-  bottom: env(safe-area-inset-bottom);
+  inset: 0;
+  touch-action: none;
 }
 .touch-device .bottom-hints,
 .touch-device .weapon-hint,
@@ -2731,9 +2757,6 @@ body {
 .touch-device .supplies button {
   min-width: 44px;
   min-height: 44px;
-}
-.touch-device #weapon-slots button {
-  min-height: 38px;
 }
 @media (max-width: 600px) {
   .quick-actions {
@@ -2769,11 +2792,11 @@ body {
     bottom: 65px;
     width: 86px;
     height: 86px;
-    left: calc(32px + env(safe-area-inset-left));
+    left: 32px;
   }
   .touch-device #touch-controls #touch-sprint {
     bottom: 162px;
-    left: calc(52px + env(safe-area-inset-left));
+    left: 52px;
     width: 44px;
     height: 44px;
   }
@@ -2865,4 +2888,344 @@ body {
 .touch-device .weapon-panel,
 .touch-device .player-panel {
   z-index: 6;
+}
+
+/* The mobile HUD is laid out within the usable game frame in both orientations. */
+#sound-button {
+  min-width: 32px;
+  min-height: 32px;
+  border: 1px solid #eeeade55;
+  background: #14212499;
+  font-size: 18px;
+}
+#sound-button.needs-audio {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.audio-settings {
+  margin: 12px 0 22px;
+}
+.audio-settings p,
+.audio-settings small {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.touch-device .topbar {
+  padding-left: 0;
+  padding-right: 0;
+}
+.touch-device #iphone-install {
+  padding: 12px;
+}
+.touch-device .modal {
+  padding: 12px;
+}
+.touch-device .modal > div {
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+.touch-device #pause-button,
+.touch-device #sound-button {
+  width: 40px;
+  height: 40px;
+}
+.touch-device .match-stats {
+  top: 8px;
+  right: 10px;
+  gap: 8px;
+}
+.touch-device .match-stats b {
+  font-size: 23px;
+}
+.touch-device #touch-look {
+  top: 64px;
+  bottom: 92px;
+  height: auto;
+  width: 68%;
+}
+.touch-device #weapon-slots button {
+  min-width: 48px;
+  min-height: 38px;
+  padding: 0 4px;
+}
+.touch-device #weapon-slots kbd {
+  display: none;
+}
+.touch-device #hud .player-panel,
+.touch-device #hud .weapon-panel {
+  bottom: 8px;
+}
+.touch-device .weapon-panel {
+  transform: none;
+  left: auto;
+}
+@media (orientation: portrait) {
+  .touch-device .zone-panel {
+    top: 10px;
+    left: 10px;
+  }
+  .touch-device .zone-panel small {
+    max-width: 100px;
+  }
+  .touch-device .compass {
+    top: 60px;
+    width: 180px;
+  }
+  .touch-device .minimap-wrap {
+    width: 82px;
+    top: 102px;
+    right: 10px;
+    bottom: auto;
+  }
+  .touch-device .minimap-label,
+  .touch-device .map-distance {
+    display: none;
+  }
+  .touch-device #minimap {
+    width: 100%;
+    height: auto;
+  }
+  .touch-device #kill-feed {
+    top: 108px;
+    left: 10px;
+    max-width: 58%;
+    font-size: 9px;
+  }
+  .touch-device #hud .player-panel {
+    left: 10px;
+    width: 126px;
+  }
+  .touch-device .player-title,
+  .touch-device .weapon-hint,
+  .touch-device #stance {
+    display: none;
+  }
+  .touch-device #hud .weapon-panel {
+    right: 10px;
+    width: calc(100% - 166px);
+    max-width: 200px;
+  }
+  .touch-device .weapon-main strong {
+    font-size: 24px;
+  }
+  .touch-device .weapon-main small {
+    font-size: 8px;
+  }
+  .touch-device #weapon-slots {
+    gap: 2px;
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+  .touch-device .ammo > b {
+    font-size: 32px;
+  }
+  .touch-device .ammo > span {
+    font-size: 14px;
+  }
+  .touch-device .supplies {
+    gap: 8px;
+    margin-top: 3px;
+  }
+  .touch-device .health-row b {
+    font-size: 19px;
+  }
+  .touch-device #joystick {
+    left: 18px;
+    bottom: 145px;
+    width: 86px;
+    height: 86px;
+  }
+  .touch-device #touch-controls #touch-sprint {
+    left: 38px;
+    bottom: 245px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #touch-controls #touch-shoot {
+    right: 18px;
+    bottom: 152px;
+    width: 66px;
+    height: 66px;
+  }
+  .touch-device #touch-controls #touch-aim {
+    right: 98px;
+    bottom: 204px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #touch-controls #touch-jump {
+    right: 28px;
+    bottom: 235px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #touch-controls #touch-crouch {
+    right: 98px;
+    bottom: 150px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #touch-controls #touch-reload {
+    right: 18px;
+    bottom: 96px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #touch-controls #touch-pickup {
+    right: 98px;
+    bottom: 96px;
+    width: 46px;
+    height: 46px;
+  }
+  .touch-device #demo-badge {
+    top: 198px;
+    font-size: 10px;
+  }
+  .touch-device .toast {
+    top: 94px;
+    font-size: 10px;
+    max-width: 85%;
+  }
+  .touch-device .lobby-copy {
+    top: 15%;
+  }
+  .touch-device .lobby-copy h1 {
+    font-size: clamp(38px, 13vw, 60px);
+  }
+  .touch-device .lobby-copy .hero-meta {
+    display: none;
+  }
+  .touch-device .quick-actions {
+    margin-top: 12px;
+  }
+  .touch-device .lobby-copy .text-link {
+    margin-top: 10px;
+  }
+}
+@media (orientation: portrait) and (max-height: 760px) {
+  .touch-device .lobby-copy {
+    top: 14%;
+  }
+  .touch-device .lobby-copy > p,
+  .touch-device .lobby-copy .text-link {
+    display: none;
+  }
+  .touch-device .lobby-copy h1 {
+    margin: 10px 0;
+    font-size: 44px;
+  }
+  .touch-device .deployment {
+    gap: 10px;
+  }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .touch-device .match-stats {
+    top: 6px;
+    right: 8px;
+  }
+  .touch-device .minimap-wrap {
+    top: 52px;
+    right: 8px;
+    width: 78px;
+  }
+  .touch-device .compass {
+    width: 190px;
+    top: 8px;
+  }
+  .touch-device .zone-panel {
+    top: 8px;
+    left: 8px;
+  }
+  .touch-device #hud .player-panel {
+    left: 8px;
+    width: 132px;
+    bottom: 6px;
+  }
+  .touch-device .supplies {
+    left: 140px;
+    bottom: 0;
+    gap: 2px;
+  }
+  .touch-device #hud .weapon-panel {
+    right: 162px;
+    width: 190px;
+    bottom: 6px;
+  }
+  .touch-device #weapon-slots {
+    gap: 2px;
+    font-size: 10px;
+    margin-bottom: 0;
+  }
+  .touch-device .weapon-main strong {
+    font-size: 21px;
+  }
+  .touch-device .ammo > b {
+    font-size: 32px;
+  }
+  .touch-device #touch-controls #touch-jump {
+    bottom: 155px;
+    right: 14px;
+  }
+  .touch-device #touch-controls #touch-shoot {
+    bottom: 88px;
+    right: 14px;
+    width: 58px;
+    height: 58px;
+  }
+  .touch-device #touch-controls #touch-aim {
+    bottom: 149px;
+    right: 85px;
+  }
+  .touch-device #touch-controls #touch-crouch {
+    bottom: 35px;
+    right: 14px;
+  }
+  .touch-device #touch-controls #touch-reload {
+    bottom: 92px;
+    right: 85px;
+  }
+  .touch-device #touch-controls #touch-pickup {
+    bottom: 35px;
+    right: 85px;
+  }
+  .touch-device #joystick {
+    left: 20px;
+    bottom: 75px;
+    width: 80px;
+    height: 80px;
+  }
+  .touch-device #touch-controls #touch-sprint {
+    left: 38px;
+    bottom: 169px;
+    width: 44px;
+    height: 44px;
+  }
+  .touch-device #touch-look {
+    top: 58px;
+    bottom: 85px;
+  }
+}
+@media (orientation: landscape) and (max-width: 740px) {
+  .touch-device .compass {
+    top: 52px;
+    width: 150px;
+  }
+  .touch-device #hud .player-panel {
+    width: 112px;
+  }
+  .touch-device .supplies {
+    left: 120px;
+  }
+  .touch-device #hud .weapon-panel {
+    width: 160px;
+  }
+  .touch-device .ammo {
+    gap: 4px;
+  }
+  .touch-device .ammo > span {
+    font-size: 14px;
+  }
 }

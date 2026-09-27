@@ -59,7 +59,7 @@ export class UI {
  </section>
  <section id="hud" class="hidden">
   <div id="demo-badge" class="hidden">● BOT TỰ CHƠI <button id="stop-demo">VỀ SẢNH ↗</button></div><div class="compass"><div id="compass-ticks"></div><span class="compass-marker">▼</span><b id="heading">N</b></div>
-  <div class="match-stats"><span><b id="alive">24</b> CÒN SỐNG</span><span><b id="kills">0</b> HẠ GỤC</span><button id="pause-button" aria-label="Tạm dừng">Ⅱ</button></div>
+  <div class="match-stats"><span><b id="alive">24</b> CÒN SỐNG</span><span><b id="kills">0</b> HẠ GỤC</span><button id="sound-button" aria-label="Bật hoặc thử âm thanh">♪</button><button id="pause-button" aria-label="Tạm dừng">Ⅱ</button></div>
   <div class="zone-panel"><div class="zone-icon">${svg("shield")}</div><div><small id="zone-title">VÙNG AN TOÀN / 01</small><strong id="zone-time">00:45</strong></div><span id="zone-state">CHUẨN BỊ</span></div><div id="kill-feed"></div>
   <div id="drop-banner"><span>ĐANG TRIỂN KHAI</span><strong>NORTHWATCH</strong><small>W A S D di chuyển dù · SHIFT hạ nhanh</small><b id="altitude">50 m</b></div>
   <div id="crosshair"><i></i><i></i><i></i><i></i><b></b></div><div id="hit-marker">×</div><div id="damage-direction"></div>
@@ -76,7 +76,7 @@ export class UI {
  <section id="tactical-map" class="modal hidden"><div class="map-modal"><div class="modal-heading"><div><small>BẢN ĐỒ CHIẾN THUẬT</small><h2>NORTHWATCH ISLAND</h2></div><button data-action="closemap" class="icon-button" aria-label="Đóng bản đồ">${svg("close")}</button></div><canvas id="full-map" width="700" height="700" aria-label="Bản đồ toàn đảo"></canvas><div class="map-legend"><span><i class="legend-player"></i> Vị trí của bạn</span><span><i class="legend-zone"></i> Vòng bo</span><span><i class="legend-next"></i> Vùng tiếp theo</span></div><p>Nhấn M để đóng · Trận đấu tiếp tục khi xem bản đồ</p></div></section>
  <section id="inventory" class="hidden"><small>TRANG BỊ CỦA BẠN</small><h2>BA LÔ</h2><div id="inventory-content"></div><p>1 / 2 / 3 đổi súng · H cứu thương · G lựu đạn<br>Nhấn TAB để đóng</p></section>
  <section id="pause" class="modal hidden"><div class="menu-panel"><small>LAST LIGHT / BATTLEGROUNDS</small><h2>TẠM DỪNG</h2><p>Trận đấu được giữ nguyên. Sẵn sàng khi bạn trở lại.</p><button id="resume" class="primary-button">TIẾP TỤC CHIẾN ĐẤU <span>↗</span></button><button data-action="settings" class="menu-button">CÀI ĐẶT ${svg("gear")}</button><button data-action="guide" class="menu-button">HƯỚNG DẪN ${svg("map")}</button><button id="return-lobby" class="menu-button">VỀ SẢNH <span>↗</span></button></div></section>
- <section id="settings" class="modal hidden"><div class="menu-panel"><div class="modal-heading"><div><small>TÙY CHỈNH TRẢI NGHIỆM</small><h2>CÀI ĐẶT</h2></div><button data-action="closesettings" class="icon-button" aria-label="Đóng cài đặt">${svg("close")}</button></div><label class="setting">Độ nhạy chuột / cảm ứng <output id="sensitivity-value">1.0</output><input id="sensitivity" type="range" min=".2" max="2.5" step=".1" value="${this.g.settings.sensitivity}"/></label><label class="setting">Âm lượng <output id="volume-value">55%</output><input id="volume" type="range" min="0" max="1" step=".05" value="${this.g.settings.volume}"/></label><label class="setting">Chất lượng hình ảnh<select id="quality"><option value="high">Cao · Bóng đổ & thảm cỏ</option><option value="medium">Cân bằng · Độ phân giải tiêu chuẩn</option><option value="low">Mượt · Tối ưu hiệu năng</option></select></label><label class="setting">Độ khó bot<select id="difficulty"><option value="easy">Tân binh</option><option value="normal">Chiến binh</option><option value="hard">Tinh nhuệ</option></select></label><button data-action="closesettings" class="primary-button">LƯU & TRỞ LẠI <span>↗</span></button></div></section>
+ <section id="settings" class="modal hidden"><div class="menu-panel"><div class="modal-heading"><div><small>TÙY CHỈNH TRẢI NGHIỆM</small><h2>CÀI ĐẶT</h2></div><button data-action="closesettings" class="icon-button" aria-label="Đóng cài đặt">${svg("close")}</button></div><label class="setting">Độ nhạy chuột / cảm ứng <output id="sensitivity-value">1.0</output><input id="sensitivity" type="range" min=".2" max="2.5" step=".1" value="${this.g.settings.sensitivity}"/></label><label class="setting">Âm lượng <output id="volume-value">55%</output><input id="volume" type="range" min="0" max="1" step=".05" value="${this.g.settings.volume}"/></label><div class="audio-settings"><button id="test-audio" class="menu-button">BẬT / THỬ ÂM THANH ♪</button><p id="audio-state" role="status">Chạm để bật âm thanh game.</p><small>Nếu chưa nghe: tăng âm lượng đa phương tiện. Trên iOS cũ, kiểm tra chế độ im lặng.</small></div><label class="setting">Chất lượng hình ảnh<select id="quality"><option value="high">Cao · Bóng đổ & thảm cỏ</option><option value="medium">Cân bằng · Độ phân giải tiêu chuẩn</option><option value="low">Mượt · Tối ưu hiệu năng</option></select></label><label class="setting">Độ khó bot<select id="difficulty"><option value="easy">Tân binh</option><option value="normal">Chiến binh</option><option value="hard">Tinh nhuệ</option></select></label><button data-action="closesettings" class="primary-button">LƯU & TRỞ LẠI <span>↗</span></button></div></section>
  <section id="guide" class="modal hidden"><div class="guide-panel"><div class="modal-heading"><div><small>SỐNG SÓT LÀ NHIỆM VỤ DUY NHẤT</small><h2>LÀM CHỦ CHIẾN TRƯỜNG</h2></div><button data-action="closeguide" class="icon-button" aria-label="Đóng hướng dẫn">${svg("close")}</button></div><div class="guide-intro"><b>24 người. Một hòn đảo. Một người sống sót.</b><p>Di chuyển vào vòng trắng trên bản đồ. Vòng xanh thu hẹp dần và gây sát thương khi bạn ở bên ngoài. Dùng nhà, cây và vật chắn làm nơi ẩn nấp.</p></div><div class="controls-grid">${[
    ["W A S D", "Di chuyển"],
    ["CHUỘT", "Nhìn xung quanh"],
@@ -116,6 +116,41 @@ export class UI {
     this.el["mode-solo"].onclick = () => this.setMode(false);
     this.el["mode-practice"].onclick = () => this.setMode(true);
     this.el.resume.onclick = () => this.g.resume();
+    const audioState = () => {
+      const ready =
+        this.g.audio.ctx?.state === "running" && this.g.audio.volume > 0;
+      this.el["sound-button"].textContent = ready ? "♪" : "♪!";
+      this.el["sound-button"].classList.toggle("needs-audio", !ready);
+      this.el["audio-state"].textContent = ready
+        ? "Âm thanh đã sẵn sàng. Chạm THỬ để nghe hai tiếng báo."
+        : "Âm thanh đang tạm ngưng. Chạm BẬT / THỬ để khôi phục.";
+    };
+    this.g.audio.onState = audioState;
+    const enableSound = () => {
+      if (!this.g.audio.volume) {
+        this.g.settings.volume = 0.55;
+        this.g.audio.setVolume(0.55);
+        this.el.volume.value = 0.55;
+        this.updateSettings();
+        this.g.saveSettings();
+      }
+      this.g.audio.test().then((ready) => {
+        audioState();
+        if (!ready)
+          this.g.emit("toast", "Chạm lại nút ♪ để bật âm thanh trong Safari");
+      });
+    };
+    this.el["sound-button"].onclick = this.el["test-audio"].onclick =
+      enableSound;
+    this.root.addEventListener(
+      "pointerdown",
+      () => {
+        if (this.g.active && this.g.audio.ctx?.state !== "running")
+          this.g.audio.init();
+      },
+      { capture: true },
+    );
+    audioState();
     this.el["pause-button"].onclick = () => this.g.pause();
     this.el["return-lobby"].onclick = this.el["results-lobby"].onclick = () =>
       this.g.lobby();
@@ -143,6 +178,7 @@ export class UI {
       this.g.settings.volume = +this.el.volume.value;
       this.g.audio.setVolume(this.g.settings.volume);
       this.updateSettings();
+      audioState();
     };
     this.el.quality.onchange = () => this.g.setQuality(this.el.quality.value);
     this.el.difficulty.onchange = () =>
@@ -186,7 +222,8 @@ export class UI {
   }
   bindTouch() {
     this.touch =
-      matchMedia("(pointer: coarse)").matches ||
+      matchMedia("(any-pointer: coarse)").matches ||
+      navigator.maxTouchPoints > 0 ||
       (import.meta.env.DEV &&
         new URLSearchParams(location.search).has("touch"));
     document.body.classList.toggle("touch-device", this.touch);

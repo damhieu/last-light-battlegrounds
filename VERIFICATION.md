@@ -48,3 +48,19 @@ Single-player battle royale against bots. No online multiplayer or drivable vehi
 
 - Offline smoke test passed with the production bundle under `/last-light-battlegrounds/`: cache completed, local preview server stopped (HTTP unreachable), page reloaded from service worker, practice match launched with 24 combatants and no console errors. Immutable same-origin asset lookup ignores response Vary differences between precache and module/CSS requests.
 - Final Facebook artifact verified by ffprobe: 1080×1920 H.264, 30 fps, 55.000-second MP4; AAC stereo audio duration 55.000 seconds. Final recorded match: 6 eliminations. Audio peak −5.4 dBFS (no clipping).
+
+## Version 1.2.1 — Safari viewport, audio and autoplay (27 September 2026)
+
+- Production build passed; 14/14 Node tests passed. New regressions cover Safari visual viewport resize/zoom/offset, navigation out of a U-shaped enclosure without crossing walls, long turns at 20/30/60 FPS, and synchronous audio unlock plus suspended/closed context recovery.
+- 17/17 in-engine browser checks passed at 430×932 with touch controls and simulated safe-area insets. No console warnings or errors. The test includes bounds, minimum hit sizes and center-point occlusion checks for movement, combat, audio, pause, healing, grenades, map and all three weapon buttons.
+- Three whole autoplay matches completed with no pair of consecutive 12-second windows lacking both movement and successful hits:
+
+| Seed   | Match time | Eliminations | Distance travelled | Placement |
+| ------ | ---------: | -----------: | -----------------: | --------: |
+| 260926 |       80 s |           14 |              388 m |         1 |
+| 1337   |       93 s |           14 |              413 m |         1 |
+| 2026   |      102 s |           13 |              527 m |         1 |
+
+- All 16 mobile controls were inside the usable frame and reachable at 430×932, 390×700, 375×667, 932×430, 844×390 and 667×375. Portrait insets: top 59 / bottom 34 px. Landscape insets: left/right 59 / bottom 21 px. Small landscape layout also inspected visually for overlapping text.
+- Actual browser clicks verified sound activation, pause, settings sound test (suspended → ready), and resume. The game requests Safari's `playback` audio session when supported, resumes Web Audio inside the tap, and exposes a visible recovery button. Hardware audio output, Safari toolbar transitions and native pinch gestures still need a physical iPhone check; desktop emulation and API mocks cannot establish those results.
+- Screenshot: `exports/iphone-v1.2.1-portrait.png` (local QA artifact, not committed). iPhone installation/troubleshooting instructions updated in `IPHONE.md`.

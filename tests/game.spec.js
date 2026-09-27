@@ -11,7 +11,7 @@ test("complete simulation integration suite", async ({ page }) => {
     "pass",
     { timeout: 80000 },
   );
-  await expect(page.locator("#test-panel")).toHaveAttribute("data-total", "15");
+  await expect(page.locator("#test-panel")).toHaveAttribute("data-total", "16");
   expect(errors).toEqual([]);
 });
 test("lobby, guide, settings, practice, map and pause work through real controls", async ({

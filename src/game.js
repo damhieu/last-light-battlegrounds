@@ -48,14 +48,18 @@ export class Game {
       powerPreference: "high-performance",
     });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    this.renderer.setSize(innerWidth, innerHeight);
+    this.renderer.setSize(
+      canvas.parentElement.clientWidth,
+      canvas.parentElement.clientHeight,
+      false,
+    );
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.13;
     this.camera = new THREE.PerspectiveCamera(
       72,
-      innerWidth / innerHeight,
+      canvas.parentElement.clientWidth / canvas.parentElement.clientHeight,
       0.06,
       1800,
     );
@@ -187,6 +191,7 @@ export class Game {
     this.onEvent?.(type, data);
   }
   start(training = false, options = {}) {
+    this.audio.init();
     this.demo = !!options.demo;
     this.pilot = this.demo ? new DemoPilot(this) : null;
     this.clearMatch();
@@ -212,7 +217,6 @@ export class Game {
     }
     this.spawnBots();
     this.spawnLoot();
-    this.audio.init();
     this.requestLock();
     this.emit("start");
     this.emit(
@@ -355,12 +359,18 @@ export class Game {
     }
   }
   bindInput() {
-    addEventListener("resize", () => {
+    const resize = () => {
       if (this.recordingSize) return;
-      this.camera.aspect = innerWidth / innerHeight;
+      const { clientWidth: width, clientHeight: height } =
+        this.canvas.parentElement;
+      if (!width || !height) return;
+      this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
-      this.renderer.setSize(innerWidth, innerHeight);
-    });
+      this.renderer.setSize(width, height, false);
+    };
+    this.resizeObserver = new ResizeObserver(resize);
+    this.resizeObserver.observe(this.canvas.parentElement);
+    addEventListener("resize", resize);
     document.addEventListener("pointerlockchange", () => {
       if (
         !document.pointerLockElement &&
@@ -475,6 +485,7 @@ export class Game {
     if (!this.active) return;
     this.previousMode = this.mode;
     this.mode = "paused";
+    this.audio.suspend();
     this.keys.clear();
     this.mouse.fire = this.mouse.aim = false;
     document.exitPointerLock?.();
@@ -1276,6 +1287,15 @@ export class Game {
     return {
       mode: this.mode,
       demo: !!this.demo,
+      pilot: this.pilot
+        ? {
+            state: this.pilot.state,
+            travel: this.pilot.travel,
+            replans: this.pilot.replans,
+            path: this.pilot.path.length,
+            stuck: this.pilot.stuck,
+          }
+        : null,
       time: this.time,
       player: { ...this.player },
       bots: this.bots.map((b) => ({

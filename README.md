@@ -1,6 +1,6 @@
 # LAST LIGHT — Battlegrounds
 
-**Thiết kế bởi Đàm Mạnh Hiếu · v1.2.0**
+**Thiết kế bởi Đàm Mạnh Hiếu · v1.2.1**
 
 🎮 **[Chơi ngay trên GitHub Pages](https://damhieu.github.io/last-light-battlegrounds/)** · [Mã nguồn](https://github.com/damhieu/last-light-battlegrounds)
 
@@ -37,6 +37,8 @@ Bản production mở ở **http://127.0.0.1:5188/**.
 - Cài đặt độ nhạy, âm lượng, 3 mức hình ảnh và 3 độ khó được lưu trên thiết bị.
 - Cài lên màn hình chính iPhone, mở dạng ứng dụng, lưu ngoại tuyến sau lần tải đầu; xem [hướng dẫn iPhone](IPHONE.md).
 - Chế độ **Xem bot chơi**: tự di chuyển, tìm mục tiêu, đổi súng, ngắm, bắn, thay đạn, hồi máu; không cộng thống kê người chơi.
+- Bot tìm đường vòng qua nhà và vật cản; chỉ tính là kẹt khi đã ra lệnh di chuyển nhưng không tiến được. Bộ kiểm thử chạy trọn trận với ba seed khác nhau.
+- Safari iPhone: khung chơi theo vùng nhìn thấy, hỗ trợ dọc/ngang và vùng an toàn; nút **♪** bật lại âm thanh khi cần.
 - Điều khiển cảm ứng: joystick, kéo nhìn, bắn, ngắm, nhảy, thay đạn, nhặt đồ, chạy nhanh, ngồi, vùng an toàn cho tai thỏ; chạm các ô vũ khí để đổi súng.
 
 ## Điều khiển
@@ -66,7 +68,7 @@ Bản production mở ở **http://127.0.0.1:5188/**.
 npm test
 ```
 
-Chạy kiểm thử tích hợp trong chính engine bằng cách mở `http://localhost:5173/?test=1` ở chế độ development rồi bấm **Run integration checks**. Bộ kiểm thử kiểm tra thả dù, di chuyển, va chạm, bắn, đạn bị tường chặn, thay đạn liên tiếp, nhặt đồ, hồi máu, lựu đạn, bot bắn trả, tạm dừng, vòng bo, thắng/thua và chơi lại. Các công cụ kiểm thử không được đưa vào production build. Có thể chạy tự động bằng `npm run test:e2e` khi Chromium của Playwright đã được cài.
+Chạy kiểm thử tích hợp trong chính engine bằng cách mở `http://localhost:5173/?test=1` ở chế độ development rồi bấm **Run integration checks**. Bộ kiểm thử kiểm tra thả dù, di chuyển, va chạm, bắn, đạn bị tường chặn, thay đạn liên tiếp, nhặt đồ, hồi máu, lựu đạn, bot bắn trả, tạm dừng, vòng bo, thắng/thua, chơi lại và ba trận autoplay hoàn chỉnh. Thêm `&touch=1&safe=1` để giả lập nút cảm ứng/vùng an toàn iPhone và kiểm tra nút có bị cắt hoặc che không. Các công cụ kiểm thử không được đưa vào production build. Có thể chạy tự động bằng `npm run test:e2e` khi Chromium của Playwright đã được cài.
 
 ## Cấu trúc
 

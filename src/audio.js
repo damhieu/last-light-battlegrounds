@@ -5,17 +5,60 @@ export class AudioEngine {
     this.steps = 0;
   }
   init() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      this.master = this.ctx.createGain();
-      this.master.gain.value = this.volume;
-      this.master.connect(this.ctx.destination);
-      const n = this.ctx.sampleRate * 2;
-      this.noise = this.ctx.createBuffer(1, n, this.ctx.sampleRate);
-      const data = this.noise.getChannelData(0);
-      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1;
+    // Safari otherwise treats Web Audio as ambient/ringer audio. Playback uses
+    // media volume, including when the iPhone Ring/Silent switch is enabled.
+    try {
+      if (navigator.audioSession) navigator.audioSession.type = "playback";
+    } catch {}
+    try {
+      if (!this.ctx || this.ctx.state === "closed") {
+        const Context = window.AudioContext || window.webkitAudioContext;
+        if (!Context) return Promise.resolve(false);
+        this.ctx = new Context();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = this.volume;
+        this.master.connect(this.ctx.destination);
+        const n = this.ctx.sampleRate * 2;
+        this.noise = this.ctx.createBuffer(1, n, this.ctx.sampleRate);
+        const data = this.noise.getChannelData(0);
+        for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1;
+        this.ctx.addEventListener("statechange", () =>
+          this.onState?.(this.ctx.state),
+        );
+      }
+      // Both resume and buffer start happen synchronously within the tap. iOS
+      // may revoke activation after asynchronous work or an app interruption.
+      const context = this.ctx;
+      const resumed = context.resume();
+      const unlock = context.createBufferSource();
+      unlock.buffer = context.createBuffer(1, 1, context.sampleRate);
+      unlock.connect(this.master);
+      unlock.start(0);
+      return Promise.resolve(resumed)
+        .then(() => {
+          this.onState?.(context.state);
+          return context.state === "running";
+        })
+        .catch(() => {
+          this.onState?.(context.state);
+          return false;
+        });
+    } catch {
+      this.onState?.("unavailable");
+      return Promise.resolve(false);
     }
-    this.ctx.resume();
+  }
+  suspend() {
+    if (this.ctx?.state === "running") this.ctx.suspend().catch(() => {});
+  }
+  test() {
+    return this.init().then((ready) => {
+      if (ready) {
+        this.tone(523, 0.16, 0.2);
+        setTimeout(() => this.tone(784, 0.22, 0.2), 180);
+      }
+      return ready;
+    });
   }
   setVolume(v) {
     this.volume = v;

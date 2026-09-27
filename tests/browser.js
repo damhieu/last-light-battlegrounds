@@ -352,6 +352,102 @@ export function installBrowserChecks(g) {
           assert(!g.demo && !g.pilot, "normal play still uses autoplay");
         },
       );
+      await check(
+        "Autoplay completes whole matches across three seeds without stalled spinning",
+        async () => {
+          const summaries = [];
+          for (const seed of [260926, 1337, 2026]) {
+            g.start(false, { demo: true, seed });
+            let windowStart = 0,
+              windowTravel = 0,
+              windowHits = 0,
+              maxIdle = 0;
+            for (let i = 0; i < 480 * 30 && g.active; i++) {
+              g.advance(1 / 30);
+              if (g.time - windowStart >= 12) {
+                const movement = g.pilot.travel - windowTravel,
+                  hits = g.player.hits - windowHits;
+                if (movement < 2 && !hits && g.time > 15) maxIdle++;
+                else maxIdle = 0;
+                assert(
+                  maxIdle < 2,
+                  `seed ${seed} stalled at ${Math.round(g.time)}s (${g.pilot.state})`,
+                );
+                windowStart = g.time;
+                windowTravel = g.pilot.travel;
+                windowHits = g.player.hits;
+                await new Promise((resolve) => setTimeout(resolve, 0));
+              }
+            }
+            assert(g.mode === "ended", `seed ${seed} never finished`);
+            assert(
+              g.pilot.travel > 80,
+              `seed ${seed} made no navigational progress`,
+            );
+            summaries.push({
+              seed,
+              seconds: Math.round(g.time),
+              kills: g.player.kills,
+              travel: Math.round(g.pilot.travel),
+              rank: g.result.rank,
+            });
+          }
+          panel.dataset.matches = JSON.stringify(summaries);
+        },
+      );
+      if (document.body.classList.contains("touch-device"))
+        await check(
+          "Every mobile action is inside the safe frame and reachable",
+          () => {
+            setup();
+            panel.style.display = "none";
+            try {
+              const frame = document
+                .querySelector("#app")
+                .getBoundingClientRect();
+              const controls = [
+                "joystick",
+                "touch-shoot",
+                "touch-aim",
+                "touch-jump",
+                "touch-reload",
+                "touch-pickup",
+                "touch-sprint",
+                "touch-crouch",
+                "pause-button",
+                "sound-button",
+                "heal-button",
+                "grenade-button",
+                "minimap-open",
+              ].map((id) => document.getElementById(id));
+              controls.push(
+                ...document.querySelectorAll("#weapon-slots button"),
+              );
+              for (const el of controls) {
+                const id = el.id || el.getAttribute("aria-label"),
+                  r = el.getBoundingClientRect();
+                assert(r.width >= 38 && r.height >= 38, `${id} too small`);
+                assert(
+                  r.left >= frame.left - 1 &&
+                    r.right <= frame.right + 1 &&
+                    r.top >= frame.top - 1 &&
+                    r.bottom <= frame.bottom + 1,
+                  `${id} clipped`,
+                );
+                const hit = document.elementFromPoint(
+                  r.x + r.width / 2,
+                  r.y + r.height / 2,
+                );
+                assert(
+                  el === hit || el.contains(hit),
+                  `${id} covered by ${hit?.id || hit?.className}`,
+                );
+              }
+            } finally {
+              panel.style.display = "";
+            }
+          },
+        );
     } finally {
       g.lobby();
       g.testing = false;

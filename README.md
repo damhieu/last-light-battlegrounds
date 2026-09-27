@@ -70,6 +70,10 @@ npm test
 
 Chạy kiểm thử tích hợp trong chính engine bằng cách mở `http://localhost:5173/?test=1` ở chế độ development rồi bấm **Run integration checks**. Bộ kiểm thử kiểm tra thả dù, di chuyển, va chạm, bắn, đạn bị tường chặn, thay đạn liên tiếp, nhặt đồ, hồi máu, lựu đạn, bot bắn trả, tạm dừng, vòng bo, thắng/thua, chơi lại và ba trận autoplay hoàn chỉnh. Thêm `&touch=1&safe=1` để giả lập nút cảm ứng/vùng an toàn iPhone và kiểm tra nút có bị cắt hoặc che không. Các công cụ kiểm thử không được đưa vào production build. Có thể chạy tự động bằng `npm run test:e2e` khi Chromium của Playwright đã được cài.
 
+## Quay video demo
+
+Chạy `RECORD_DEMO=1 npm run dev -- --host 127.0.0.1`, mở `/?record=1` và bấm **QUAY DEMO HD**. Studio ghi 55 giây gameplay thật ở 1080×1920; lưu WebM, WAV đồng bộ và dữ liệu di chuyển/giao chiến vào `exports/v<phiên bản>/`. Lớp ống ngắm theo trạng thái ngắm/thay đạn; bản đồ và chỉ số luôn hiển thị phía trên. Các file video cục bộ không được đưa vào Git hoặc bản game online.
+
 ## Cấu trúc
 
 - `src/core.js`: địa hình xác định, va chạm, hitscan, giáp, thông số vũ khí và vòng bo.

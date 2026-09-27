@@ -55,11 +55,18 @@ export default defineConfig({
             chunks.push(chunk);
           });
           req.on("end", () => {
-            mkdirSync("exports", { recursive: true });
+            const output = `exports/v${pkg.version}`;
+            const params = new URL(req.url, "http://localhost").searchParams;
+            mkdirSync(output, { recursive: true });
             writeFileSync(
-              new URL(req.url, "http://localhost").searchParams.has("audio")
-                ? "exports/demo-audio.wav"
-                : "exports/demo-source.webm",
+              resolve(
+                output,
+                params.has("audio")
+                  ? "demo-audio.wav"
+                  : params.has("telemetry")
+                    ? "demo-telemetry.json"
+                    : "demo-source.webm",
+              ),
               Buffer.concat(chunks),
             );
             res.end("saved");

@@ -44,7 +44,6 @@ export function installRecorder(g, ui) {
       };
       const saved = {
         ratio: g.renderer.getPixelRatio(),
-        aspect: g.camera.aspect,
       };
       g.recordingSize = true;
       g.renderer.setPixelRatio(1);
@@ -53,6 +52,8 @@ export function installRecorder(g, ui) {
       g.camera.updateProjectionMatrix();
       g.start(false, { demo: true });
       const events = [];
+      const samples = [];
+      const frames = [];
       const originals = {};
       for (const method of ["tone", "burst"]) {
         originals[method] = g.audio[method];
@@ -83,6 +84,23 @@ export function installRecorder(g, ui) {
       g.onRendered = (now) => {
         const t = (now - started) / 1000,
           p = g.player;
+        frames.push(t);
+        if (!samples.length || t - samples.at(-1).time >= 0.5) {
+          samples.push({
+            time: t,
+            gameTime: g.time,
+            x: p.x,
+            z: p.z,
+            yaw: p.yaw,
+            pitch: p.pitch,
+            state: g.pilot?.state,
+            travel: g.pilot?.travel,
+            hits: p.hits,
+            shots: p.shots,
+            kills: p.kills,
+            hp: p.hp,
+          });
+        }
         c.fillStyle = "#101d20";
         c.fillRect(0, 0, 1080, 1920);
         c.drawImage(g.canvas, 0, 210, 1080, 1440);
@@ -103,23 +121,8 @@ export function installRecorder(g, ui) {
           "#b3b9ac",
           500,
         );
-        c.fillStyle = "#142124bd";
-        c.fillRect(52, 246, 400, 72);
-        text(
-          `${g.bots.filter((b) => b.alive).length + (p.hp > 0 ? 1 : 0)} CÒN SỐNG`,
-          77,
-          293,
-          31,
-        );
-        text(`${p.kills} HẠ GỤC`, 284, 293, 31, "#efbd69");
-        c.globalAlpha = 0.9;
-        c.drawImage(ui.el.minimap, 830, 244, 198, 198);
-        c.globalAlpha = 1;
-        c.strokeStyle = "#eeeade";
-        c.lineWidth = 2;
-        c.strokeRect(830, 244, 198, 198);
         if (g.mode === "playing") {
-          if (g.mouse.aim && p.weapon === 1) {
+          if (g.mouse.aim && p.weapon === 1 && p.reload <= 0) {
             c.fillStyle = "#071112bf";
             c.beginPath();
             c.rect(0, 210, 1080, 1440);
@@ -159,6 +162,22 @@ export function installRecorder(g, ui) {
             c.stroke();
           }
         }
+        // Keep status and map above the scope vignette.
+        c.fillStyle = "#142124bd";
+        c.fillRect(52, 246, 400, 72);
+        text(
+          `${g.bots.filter((b) => b.alive).length + (p.hp > 0 ? 1 : 0)} CÒN SỐNG`,
+          77,
+          293,
+          31,
+        );
+        text(`${p.kills} HẠ GỤC`, 284, 293, 31, "#efbd69");
+        c.globalAlpha = 0.9;
+        c.drawImage(ui.el.minimap, 830, 244, 198, 198);
+        c.globalAlpha = 1;
+        c.strokeStyle = "#eeeade";
+        c.lineWidth = 2;
+        c.strokeRect(830, 244, 198, 198);
         if (g.killTime > 0) {
           c.fillStyle = "#142124dd";
           c.fillRect(230, 1350, 620, 98);
@@ -307,6 +326,32 @@ export function installRecorder(g, ui) {
           });
           if (!audioResponse.ok)
             throw new Error("Không lưu được âm thanh đồng bộ");
+          const telemetryResponse = await fetch("/__recording?telemetry=1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(
+              {
+                build: BUILD_INFO,
+                duration: 55,
+                width: 1080,
+                height: 1920,
+                final: {
+                  kills: g.player.kills,
+                  shots: g.player.shots,
+                  hits: g.player.hits,
+                  travel: g.pilot.travel,
+                  hp: g.player.hp,
+                },
+                samples,
+                frames,
+                audioEvents: events,
+              },
+              null,
+              2,
+            ),
+          });
+          if (!telemetryResponse.ok)
+            throw new Error("Không lưu được dữ liệu kiểm tra video");
           status.textContent = ` ĐÃ LƯU · ${(blob.size / 1048576).toFixed(1)} MB · ${g.player.kills} hạ gục`;
           panel.dataset.result = "saved";
         } catch (error) {
@@ -321,8 +366,10 @@ export function installRecorder(g, ui) {
         stream.getTracks().forEach((track) => track.stop());
         g.recordingSize = false;
         g.renderer.setPixelRatio(saved.ratio);
-        g.renderer.setSize(innerWidth, innerHeight);
-        g.camera.aspect = saved.aspect;
+        const { clientWidth: width, clientHeight: height } =
+          g.canvas.parentElement;
+        g.renderer.setSize(width, height, false);
+        g.camera.aspect = width / height;
         g.camera.updateProjectionMatrix();
         button.disabled = false;
       };

@@ -64,3 +64,11 @@ Single-player battle royale against bots. No online multiplayer or drivable vehi
 - All 16 mobile controls were inside the usable frame and reachable at 430×932, 390×700, 375×667, 932×430, 844×390 and 667×375. Portrait insets: top 59 / bottom 34 px. Landscape insets: left/right 59 / bottom 21 px. Small landscape layout also inspected visually for overlapping text.
 - Actual browser clicks verified sound activation, pause, settings sound test (suspended → ready), and resume. The game requests Safari's `playback` audio session when supported, resumes Web Audio inside the tap, and exposes a visible recovery button. Hardware audio output, Safari toolbar transitions and native pinch gestures still need a physical iPhone check; desktop emulation and API mocks cannot establish those results.
 - Screenshot: `exports/iphone-v1.2.1-portrait.png` (local QA artifact, not committed). iPhone installation/troubleshooting instructions updated in `IPHONE.md`.
+
+### Replacement Facebook video
+
+- Re-recorded the fixed v1.2.1 game. Final capture: 10 eliminations, 35 hits, approximately 225 m travelled; telemetry sampled throughout all 55 seconds has no 5-second window with a full stationary spin and no successful hits.
+- Capture HUD now draws the minimap and counters above the scope vignette, and removes that vignette during reloads to match the rendered camera. The renderer restores to the usable viewport after capture.
+- Final deliverable: `exports/Last-Light-Facebook-HD-v1.2.1.mp4`, 1080×1920, H.264, 30 fps, 55.000 seconds, AAC stereo at 48 kHz, 33,425,702 bytes. Audio event timing comes from the actual recorded match, gain +5 dB, final peak −6.4 dBFS.
+- Full-file decode and black-frame scan passed. No freeze longer than one second during gameplay; the detector only flags the intentionally static closing card. Contact sheet and opening/closing frames inspected for text clipping and HUD visibility.
+- Versioned source video, WAV, telemetry and QA metadata are in `exports/v1.2.1/`. The default video/cover filenames now point to copies of the corrected assets; original assets are preserved under `exports/v1.2.0/`. Capture tools remain development-only and media stays outside Git.
